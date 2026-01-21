@@ -40,5 +40,13 @@ async def on_message(message):
 async def hello(ctx):
     await ctx.send("Hello")
 
+@bot.command()
+async def join(ctx):
+    if ctx.author.voice is None:
+        await ctx.send("В голосовом канале никого нет")
+        return
+    voice_channel = ctx.author.voice.channel
+    await voice_channel.connect()
+    
 
 bot.run(TOKEN)

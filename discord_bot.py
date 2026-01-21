@@ -48,5 +48,9 @@ async def join(ctx):
     voice_channel = ctx.author.voice.channel
     await voice_channel.connect()
     
+@bot.command()
+async def leave(ctx):
+    vc = ctx.guild.voice_client
+    await vc.disconnect()
 
 bot.run(TOKEN)

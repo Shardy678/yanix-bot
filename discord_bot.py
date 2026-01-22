@@ -1,5 +1,3 @@
-# This example requires the 'message_content' intent.
-
 import os
 import discord
 from discord.ext import commands
@@ -8,18 +6,9 @@ from dotenv import load_dotenv
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
 
-# class MyClient(discord.Client):
-#     async def on_ready(self):
-#         print(f'Logged on as {self.user}!')
+if not TOKEN:
+    raise ValueError("DISCORD_TOKEN отсутствует в .env")
 
-#     async def on_message(self, message):
-#         print(f'Message from {message.author}: {message.content}')
-#         if message.author.bot:
-#             return
-#         if message.content.startswith("!"):
-#             if message.content == "!hello":
-#                 await message.channel.send('Hello') 
-                
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -33,12 +22,14 @@ async def on_message(message):
     channel = message.channel
     content = message.content
 
-    print(f'{channel}   {author}: {content}')
+    print(f"[{channel}] {author}: {content}")
     await bot.process_commands(message)
+
 
 @bot.command()
 async def hello(ctx):
     await ctx.send("Hello")
+
 
 @bot.command()
 async def join(ctx):
@@ -47,6 +38,6 @@ async def join(ctx):
         return
     voice_channel = ctx.author.voice.channel
     await voice_channel.connect()
-    
+
 
 bot.run(TOKEN)

@@ -2,6 +2,7 @@
 
 import os
 import discord
+import yt_dlp
 from discord.ext import commands
 from dotenv import load_dotenv
 
@@ -46,11 +47,37 @@ async def join(ctx):
         await ctx.send("В голосовом канале никого нет")
         return
     voice_channel = ctx.author.voice.channel
+    vc = ctx.guild.voice_client
+    if vc is not None:
+        if vc.channel == voice_channel:
+            await ctx.send("Я уже в голосовом канале")
+            return
+        else:
+            await vc.move_to(voice_channel)
+            return
     await voice_channel.connect()
     
 @bot.command()
 async def leave(ctx):
-    vc = ctx.guild.voice_client
+    if ctx.guild.voice_client is None:
+        await ctx.send("Я не нахожусь в голосовом канале")
+        return
+    vc = ctx.guild.voice_client # А если в начале блока обозначить vc, то и не придётся писать полную команду тремя строками выше? Мне надо проверить это
     await vc.disconnect()
+
+@bot.command()
+async def play(ctx, url_or_file):
+    if ctx.author.voice is None:
+        await ctx.send("В голосовом канале никого нет")
+        return
+    voice_channel = ctx.author.voice.channel
+    vc = ctx.guild.voice_client
+    if vc is not None:
+        if vc.channel == voice_channel:
+            return
+        else:
+            await vc.move_to(voice_channel)
+            return
+    await voice_channel.connect()
 
 bot.run(TOKEN)

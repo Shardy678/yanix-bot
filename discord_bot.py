@@ -47,7 +47,6 @@ async def join(ctx):
             await vc.move_to(voice_channel)
             return
     await voice_channel.connect()
-<<<<<<< HEAD
     
 @bot.command()
 async def leave(ctx):
@@ -71,8 +70,5 @@ async def play(ctx, url_or_file):
             await vc.move_to(voice_channel)
             return
     await voice_channel.connect()
-=======
->>>>>>> 1d0a1d7037287bfae10343915ad4544c3736cfc5
-
 
 bot.run(TOKEN)

@@ -1,5 +1,3 @@
-# This example requires the 'message_content' intent.
-
 import os
 import discord
 import yt_dlp
@@ -9,18 +7,9 @@ from dotenv import load_dotenv
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
 
-# class MyClient(discord.Client):
-#     async def on_ready(self):
-#         print(f'Logged on as {self.user}!')
+if not TOKEN:
+    raise ValueError("DISCORD_TOKEN отсутствует в .env")
 
-#     async def on_message(self, message):
-#         print(f'Message from {message.author}: {message.content}')
-#         if message.author.bot:
-#             return
-#         if message.content.startswith("!"):
-#             if message.content == "!hello":
-#                 await message.channel.send('Hello') 
-                
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -34,12 +23,14 @@ async def on_message(message):
     channel = message.channel
     content = message.content
 
-    print(f'{channel}   {author}: {content}')
+    print(f"[{channel}] {author}: {content}")
     await bot.process_commands(message)
+
 
 @bot.command()
 async def hello(ctx):
     await ctx.send("Hello")
+
 
 @bot.command()
 async def join(ctx):
@@ -56,6 +47,7 @@ async def join(ctx):
             await vc.move_to(voice_channel)
             return
     await voice_channel.connect()
+<<<<<<< HEAD
     
 @bot.command()
 async def leave(ctx):
@@ -79,5 +71,8 @@ async def play(ctx, url_or_file):
             await vc.move_to(voice_channel)
             return
     await voice_channel.connect()
+=======
+>>>>>>> 1d0a1d7037287bfae10343915ad4544c3736cfc5
+
 
 bot.run(TOKEN)

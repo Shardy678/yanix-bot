@@ -3,6 +3,7 @@ import discord
 import yt_dlp
 from discord.ext import commands
 from dotenv import load_dotenv
+from discord import FFmpegPCMAudio
 
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
@@ -57,7 +58,10 @@ async def leave(ctx):
     await vc.disconnect()
 
 @bot.command()
-async def play(ctx, url_or_file):
+async def play(ctx,url_or_file=None):
+    if url_or_file is None:
+        await ctx.send("Дай мне ссылку")
+        return
     if ctx.author.voice is None:
         await ctx.send("В голосовом канале никого нет")
         return
@@ -69,6 +73,18 @@ async def play(ctx, url_or_file):
         else:
             await vc.move_to(voice_channel)
             return
-    await voice_channel.connect()
+    vc = await voice_channel.connect()
+    ydl_opts = {
+        'format': 'bestaudio/best',
+        'quiet': True,
+        'noplaylist': True,
+        'default_search': 'ytsearch',
+    }
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        info = ydl.extract_info(url_or_file, download=False)
+        audio_url = info['url']
+    source = FFmpegPCMAudio(audio_url)
+    vc.play(source)
+
 
 bot.run(TOKEN)

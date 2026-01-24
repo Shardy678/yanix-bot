@@ -48,41 +48,48 @@ async def join(ctx):
             await vc.move_to(voice_channel)
             return
     await voice_channel.connect()
-    
-@bot.command()
-async def leave(ctx):
-    if ctx.guild.voice_client is None:
-        await ctx.send("Я не нахожусь в голосовом канале")
-        return
-    vc = ctx.guild.voice_client # А если в начале блока обозначить vc, то и не придётся писать полную команду тремя строками выше? Мне надо проверить это
-    await vc.disconnect()
+
 
 @bot.command()
-async def play(ctx,url_or_file=None):
+async def leave(ctx):
+    vc = ctx.guild.voice_client
+    if vc is None:
+        await ctx.send("Я не нахожусь в голосовом канале")
+        return
+    await vc.disconnect()
+
+
+@bot.command()
+async def play(ctx, url_or_file=None):
     if url_or_file is None:
         await ctx.send("Дай мне ссылку")
         return
+    
     if ctx.author.voice is None:
         await ctx.send("В голосовом канале никого нет")
         return
+    
     voice_channel = ctx.author.voice.channel
     vc = ctx.guild.voice_client
     if vc is not None:
         if vc.channel == voice_channel:
-            return
+            pass
         else:
             await vc.move_to(voice_channel)
-            return
-    vc = await voice_channel.connect()
+    else:
+        vc = await voice_channel.connect()
+
     ydl_opts = {
-        'format': 'bestaudio/best',
-        'quiet': True,
-        'noplaylist': True,
-        'default_search': 'ytsearch',
+        "format": "bestaudio/best",
+        "quiet": True,
+        "noplaylist": True,
+        "default_search": "ytsearch",
     }
+
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url_or_file, download=False)
-        audio_url = info['url']
+        audio_url = info["url"]
+        
     source = FFmpegPCMAudio(audio_url)
     vc.play(source)
 

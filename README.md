@@ -46,23 +46,6 @@ ffmpeg -version
 
 ---
 
-### 3️⃣ Node.js (ОБЯЗАТЕЛЬНО)
-
-YouTube теперь требует JS-рантайм для извлечения потоков.
-
-#### Установка
-
-```bash
-node --version
-```
-
-Если команды нет:
-
-* Linux: `sudo apt install nodejs npm`
-* Windows: [https://nodejs.org/](https://nodejs.org/)
-
----
-
 ## 📥 Установка
 
 ```bash
@@ -74,14 +57,6 @@ source venv/bin/activate  # Linux/macOS
 venv\\Scripts\\activate     # Windows
 
 pip install -r requirements.txt
-```
-
-### `requirements.txt`
-
-```txt
-discord.py
-yt-dlp
-python-dotenv
 ```
 
 ---

@@ -20,8 +20,7 @@ ydl_opts = {
     "ignoreerrors": False,
     "default_search": "auto",
     "source_address": "0.0.0.0",
-    "no_warnings": True,
-    "js_runtimes": {"node": {}},
+    # "no_warnings": True,
 }
 
 

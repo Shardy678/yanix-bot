@@ -11,6 +11,19 @@ TOKEN = os.getenv("DISCORD_TOKEN")
 if not TOKEN:
     raise ValueError("DISCORD_TOKEN отсутствует в .env")
 
+ydl_opts = {
+    "format": "bestaudio/best",
+    "outtmpl": "%(extractor)s-%(id)s-%(title)s.%(ext)s",
+    "restrictfilenames": True,
+    "noplaylist": True,
+    "nocheckcertificate": True,
+    "ignoreerrors": False,
+    "default_search": "auto",
+    "source_address": "0.0.0.0",
+    "no_warnings": True,
+    "js_runtimes": {"node": {}},
+}
+
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -64,11 +77,11 @@ async def play(ctx, url_or_file=None):
     if url_or_file is None:
         await ctx.send("Дай мне ссылку")
         return
-    
+
     if ctx.author.voice is None:
         await ctx.send("В голосовом канале никого нет")
         return
-    
+
     voice_channel = ctx.author.voice.channel
     vc = ctx.guild.voice_client
     if vc is not None:
@@ -79,17 +92,10 @@ async def play(ctx, url_or_file=None):
     else:
         vc = await voice_channel.connect()
 
-    ydl_opts = {
-        "format": "bestaudio/best",
-        "quiet": True,
-        "noplaylist": True,
-        "default_search": "ytsearch",
-    }
-
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url_or_file, download=False)
         audio_url = info["url"]
-        
+
     source = FFmpegPCMAudio(audio_url)
     vc.play(source)
 

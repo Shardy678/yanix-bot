@@ -98,5 +98,41 @@ async def play(ctx, url_or_file=None):
     source = FFmpegPCMAudio(audio_url)
     vc.play(source)
 
+@bot.command()
+async def pause(ctx):
+    vc = ctx.guild.voice_client
+    if vc is None:
+        await ctx.send("Я не нахожусь в голосовом канале")
+        return
+    
+    if vc.is_paused():
+            await ctx.send("Воспроизведение уже на паузе")
+            return
+
+    if not vc.is_playing() and not vc.is_paused():
+        await ctx.send("Ничего не играет")
+        return
+    vc.pause()
+
+    # voice_channel = ctx.author.voice.channel
+    # if vc.channel == voice_channel:
+    #     await ctx.send("Воспроизведение на паузе")
+    #     return
+    # vc.pause()
+
+# @bot.command()
+# async def resume(ctx):
+#     vc = ctx.guild.voice_client
+#     if vc is None:
+#         await ctx.send("Я не нахожусь в голосовом канале")
+#         return
+    
+#     if not vc.is_playing():
+#         return   
+#     vc.resume()
+
+#     if vc.is_playing():
+#         pass
+
 
 bot.run(TOKEN)
